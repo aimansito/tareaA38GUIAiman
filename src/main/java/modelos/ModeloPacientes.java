@@ -14,7 +14,7 @@ public class ModeloPacientes extends DefaultTableModel{
     public ModeloPacientes(){
         // Se asignan los nombres de las columnas de la tabla
         // en función de los atributos que tiene la persona
-        String[] columnNames = {"ID", "NOMBRE", "APELLIDO", "CIUDAD"}; 
+        String[] columnNames = {"ID", "NOMBRE", "FECHA_NAC", "Grupo Sang","RH","NºDonaciones"}; 
         
         // Se le indica al modelo el nombre de las columnas y cantidad
         this.setColumnIdentifiers(columnNames); 

@@ -4,17 +4,28 @@
  */
 package daw;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import modelos.ListaPacientes;
+import modelos.ModeloPacientes;
+
 /**
  *
  * @author aiman
  */
 public class Principal extends javax.swing.JFrame {
 
+    private modelos.ListaPacientes listaPacientes;
     /**
      * Creates new form Principal
      */
-    public Principal() {
+    public Principal() throws IOException {
+        listaPacientes = new ListaPacientes();
         initComponents();
+        cargarDatosJTable();
     }
 
     /**
@@ -28,6 +39,8 @@ public class Principal extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,13 +57,35 @@ public class Principal extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jButton1.setText("Editar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(255, 51, 51));
+        jButton2.setText("Cancelar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
                 .addContainerGap(414, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -58,12 +93,70 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(66, 66, 66)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addGap(40, 40, 40))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        if (jTable1.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(null, "No has seleccionado ningún registro");
+        } else {
+            // Muestro la ventana de edición
+            new Editar(this, true).setVisible(true);
+            // Una vez termine la ejecución de la ventana Editar2
+            // Llamo a cargar de nuevo los datos en el jTable con los cambios
+            cargarDatosJTable();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+     private void cargarDatosJTable() {
+
+
+        modelos.ModeloPacientes modelo = new ModeloPacientes();
+
+       
+        Object[] fila = new Object[modelo.getColumnCount()];
+
+        
+        for (int i = 0; i < listaPacientes.getPacientes().size(); i++) {
+            fila[0] = listaPacientes.getPacientes().get(i).getId_paciente();
+            fila[1] = listaPacientes.getPacientes().get(i).getNombre();
+            fila[2] = listaPacientes.getPacientes().get(i).getFechaNacimiento();
+            fila[3] = listaPacientes.getPacientes().get(i).getGrupoSanguineo();
+            fila[4] = listaPacientes.getPacientes().get(i).getRh();
+            fila[5] = listaPacientes.getPacientes().get(i).getNumeroDonaciones();
+            modelo.addRow(fila);
+            if(i==25){
+                break;
+            }
+        }
+
+        jTable1.setModel(modelo);
+
+    }
+    // Método para obtener la lista de personas cargada en el formulario
+    // desde el diálogo
+    public ListaPacientes getListaPacientes() {
+        return this.listaPacientes;
+    }
+
+    // Método para obtener el jtable del formulario
+    // desde el diálogo
+    public JTable getJTable() {
+        return this.jTable1;
+    }
     /**
      * @param args the command line arguments
      */
@@ -94,12 +187,18 @@ public class Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+                try {
+                    new Principal().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

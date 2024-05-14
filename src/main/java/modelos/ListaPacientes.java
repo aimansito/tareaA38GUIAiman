@@ -4,6 +4,8 @@
  */
 package modelos;
 
+import daw.Ficheros;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -13,8 +15,9 @@ import java.util.ArrayList;
 public class ListaPacientes {
     private ArrayList<Paciente> pacientes ;
 
-    public ListaPacientes(ArrayList<Paciente> pacientes) {
+    public ListaPacientes() throws IOException {
         this.pacientes = new ArrayList<>();
+        this.pacientes = Ficheros.leerJSON();
     }
 
     public ArrayList<Paciente> getPacientes() {
